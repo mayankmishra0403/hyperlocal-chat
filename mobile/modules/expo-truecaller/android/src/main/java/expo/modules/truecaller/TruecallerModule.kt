@@ -1,6 +1,7 @@
 package expo.modules.truecaller
 
 import expo.modules.kotlin.Promise
+import expo.modules.kotlin.exception.CodedException
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
 import androidx.fragment.app.FragmentActivity
@@ -17,12 +18,12 @@ class TruecallerModule : Module() {
     AsyncFunction("verify") { promise: Promise ->
       val activity = appContext.currentActivity
       if (activity == null) {
-        promise.reject("NO_ACTIVITY", "No current activity found")
+        promise.reject("NO_ACTIVITY", "No current activity found", null)
         return@AsyncFunction
       }
 
       if (activity !is FragmentActivity) {
-        promise.reject("WRONG_ACTIVITY", "FragmentActivity required")
+        promise.reject("WRONG_ACTIVITY", "FragmentActivity required", null)
         return@AsyncFunction
       }
 
@@ -40,21 +41,21 @@ class TruecallerModule : Module() {
                   )
                 )
               } else {
-                promise.reject("INVALID_DATA", "Missing requestId or phoneNumber from Truecaller")
+                promise.reject("INVALID_DATA", "Missing requestId or phoneNumber from Truecaller", null)
               }
             }
 
             override fun onFailureProfileShared(trueError: TrueError) {
               promise.reject(
-                "TRUECALLER_FAILED",
-                trueError.message ?: "Verification failed"
+                CodedException("TRUECALLER_FAILED: Truecaller verification failed (error=${trueError.errorType})")
               )
             }
 
-            override fun onVerificationRequired() {
+            override fun onVerificationRequired(trueError: TrueError) {
               promise.reject(
                 "VERIFICATION_REQUIRED",
-                "Truecaller requires SMS-based verification"
+                "Truecaller requires SMS-based verification",
+                null
               )
             }
           }
@@ -67,7 +68,7 @@ class TruecallerModule : Module() {
           TruecallerSDK.init(scope)
           TruecallerSDK.getInstance().getUserProfile(activity)
         } catch (e: Exception) {
-          promise.reject("INIT_ERROR", e.message ?: "Failed to initialize Truecaller SDK")
+          promise.reject("INIT_ERROR", e.message ?: "Failed to initialize Truecaller SDK", null)
         }
       }
     }
