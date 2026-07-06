@@ -21,5 +21,5 @@ android {
 
 dependencies {
     implementation project(':expo-modules-core')
-    implementation "com.truecaller.android.sdk:truecaller-sdk:2.9.11"
+    implementation "com.truecaller.android.sdk:truecaller-sdk:2.9.0"
 }
