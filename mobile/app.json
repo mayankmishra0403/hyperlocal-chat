@@ -1,0 +1,41 @@
+{
+  "expo": {
+    "name": "Hyperlocal Chat",
+    "slug": "hyperlocal-chat",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "ios": {
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "Hyperlocal Chat needs your location to show nearby groups and enforce the 10km proximity zone."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#1F2937",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false,
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Hyperlocal Chat needs your location to show nearby groups and enforce the 10km proximity zone.",
+          "locationWhenInUsePermission": "Hyperlocal Chat needs your location to show nearby groups and enforce the 10km proximity zone."
+        }
+      ]
+    ]
+  }
+}
