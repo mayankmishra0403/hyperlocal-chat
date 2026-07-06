@@ -13,6 +13,7 @@
       }
     },
     "android": {
+      "package": "com.hyperlocal.chat",
       "adaptiveIcon": {
         "backgroundColor": "#1F2937",
         "foregroundImage": "./assets/android-icon-foreground.png",
@@ -22,7 +23,9 @@
       "predictiveBackGestureEnabled": false,
       "permissions": [
         "ACCESS_FINE_LOCATION",
-        "ACCESS_COARSE_LOCATION"
+        "ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION"
       ]
     },
     "web": {
@@ -36,6 +39,12 @@
           "locationWhenInUsePermission": "Hyperlocal Chat needs your location to show nearby groups and enforce the 10km proximity zone."
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "b44d283e-6325-4a3b-8393-d91d3753e4c6"
+      }
+    },
+    "owner": "mayank12303"
   }
 }
