@@ -39,7 +39,8 @@
           "locationWhenInUsePermission": "Hyperlocal Chat needs your location to show nearby groups and enforce the 10km proximity zone."
         }
       ],
-      "./modules/expo-truecaller/app.plugin.js"
+      "./modules/expo-truecaller/app.plugin.js",
+      "expo-font"
     ],
     "extra": {
       "eas": {

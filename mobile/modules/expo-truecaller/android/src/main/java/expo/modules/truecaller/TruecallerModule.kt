@@ -5,10 +5,10 @@ import expo.modules.kotlin.exception.CodedException
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
 import androidx.fragment.app.FragmentActivity
-import com.truecaller.android.sdk.legacy.TruecallerSDK
-import com.truecaller.android.sdk.legacy.TruecallerSdkScope
-import com.truecaller.android.sdk.legacy.ITrueCallback
-import com.truecaller.android.sdk.legacy.TrueError
+import com.truecaller.android.sdk.TruecallerSDK
+import com.truecaller.android.sdk.TruecallerSdkScope
+import com.truecaller.android.sdk.ITrueCallback
+import com.truecaller.android.sdk.TrueError
 import com.truecaller.android.sdk.common.models.TrueProfile
 
 class TruecallerModule : Module() {

@@ -2,8 +2,9 @@ const { withAndroidManifest } = require("expo/config-plugins");
 
 module.exports = function withTruecaller(config) {
   return withAndroidManifest(config, (manifestConfig) => {
-    const clientId = manifestConfig.extra?.trucallerClientId;
-    if (!clientId) return manifestConfig;
+    const clientId =
+      manifestConfig.extra?.trucallerClientId ||
+      "53j2woqsgw47a2yzcntoojpru5dyih6zz1000yd1jbs";
 
     const androidManifest = manifestConfig.modResults;
     const application = androidManifest.manifest?.application?.[0];
