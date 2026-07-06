@@ -13,6 +13,7 @@ interface AuthContextType {
   loginExisting: (phone: string) => Promise<void>;
   sendOtp: (phone: string) => Promise<void>;
   verifyOtp: (phone: string, code: string, displayName: string) => Promise<void>;
+  truecallerVerify: (requestId: string, phone: string, displayName?: string) => Promise<void>;
   logout: () => Promise<void>;
 }
 
@@ -25,6 +26,7 @@ const AuthContext = createContext<AuthContextType>({
   loginExisting: async () => {},
   sendOtp: async () => {},
   verifyOtp: async () => {},
+  truecallerVerify: async () => {},
   logout: async () => {},
 });
 
@@ -100,6 +102,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     []
   );
 
+  const truecallerVerify = useCallback(
+    async (requestId: string, phone: string, displayName?: string) => {
+      const { user: u, token: t } = await api.truecallerLogin(
+        requestId,
+        phone,
+        displayName
+      );
+      setUser(u);
+      setToken(t);
+      await AsyncStorage.setItem("token", t);
+      await AsyncStorage.setItem("user", JSON.stringify(u));
+      await connectSocket();
+    },
+    []
+  );
+
   const logout = useCallback(async () => {
     disconnectSocket();
     setUser(null);
@@ -119,6 +137,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         loginExisting,
         sendOtp,
         verifyOtp,
+        truecallerVerify,
         logout,
       }}
     >

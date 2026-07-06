@@ -9,9 +9,10 @@ import type { AuthPayload } from "../middleware/auth";
 const OTP_PREFIX = "otp:";
 
 export async function sendOtp(phone: string): Promise<void> {
+  const normalized = phone.startsWith("+") ? phone : `+91${phone}`;
   const code = generateCode(config.otp.length);
   await redis.setex(`${OTP_PREFIX}${phone}`, config.otp.ttlSeconds, code);
-  await sms.send(phone, `Your verification code is: ${code}`);
+  await sms.send(normalized, `Your verification code is: ${code}`);
 }
 
 export async function verifyOtp(

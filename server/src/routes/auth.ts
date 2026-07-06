@@ -3,6 +3,7 @@ import { z } from "zod";
 import { config } from "../config";
 import { loginExisting, loginOrRegister } from "../services/auth";
 import { sendOtp, verifyOtp } from "../services/otp";
+import { loginWithTruecaller } from "../services/truecaller";
 import { findUserByPhone } from "../models/user";
 
 const router = Router();
@@ -116,6 +117,35 @@ router.post("/login-existing", async (req: Request, res: Response) => {
     }
     const message = err instanceof Error ? err.message : "Unknown error";
     console.error("Auth error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+const truecallerSchema = z.object({
+  requestId: z.string().min(1),
+  phone: z.string().regex(/^\+?[1-9]\d{6,14}$/, "Invalid phone number"),
+  displayName: z.string().max(100).optional(),
+});
+
+router.post("/truecaller", async (req: Request, res: Response) => {
+  try {
+    const body = truecallerSchema.parse(req.body);
+    const result = await loginWithTruecaller(
+      body.requestId,
+      body.phone,
+      body.displayName
+    );
+    if (!result) {
+      res.status(401).json({ error: "Truecaller verification failed" });
+      return;
+    }
+    res.json(result);
+  } catch (err) {
+    if (err instanceof z.ZodError) {
+      res.status(400).json({ error: err.errors });
+      return;
+    }
+    console.error("truecaller auth error:", err);
     res.status(500).json({ error: "Internal server error" });
   }
 });

@@ -38,12 +38,14 @@
           "locationAlwaysAndWhenInUsePermission": "Hyperlocal Chat needs your location to show nearby groups and enforce the 10km proximity zone.",
           "locationWhenInUsePermission": "Hyperlocal Chat needs your location to show nearby groups and enforce the 10km proximity zone."
         }
-      ]
+      ],
+      "./modules/expo-truecaller/app.plugin.js"
     ],
     "extra": {
       "eas": {
         "projectId": "b44d283e-6325-4a3b-8393-d91d3753e4c6"
-      }
+      },
+      "trucallerClientId": "53j2woqsgw47a2yzcntoojpru5dyih6zz1000yd1jbs"
     },
     "owner": "mayank12303"
   }

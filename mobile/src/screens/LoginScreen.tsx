@@ -16,14 +16,19 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { useAuth } from "../context/AuthContext";
 import { theme } from "../theme";
+import Constants from "expo-constants";
+import { verifyTruecaller } from "../../modules/expo-truecaller";
 
 function maskPhone(phone: string): string {
   if (phone.length < 8) return phone;
   return phone.slice(0, 3) + "****" + phone.slice(-4);
 }
 
+const trucallerClientId =
+  Constants.expoConfig?.extra?.trucallerClientId || "";
+
 export default function LoginScreen() {
-  const { checkPhone, directLogin, loginExisting, sendOtp, verifyOtp, loading } = useAuth();
+  const { checkPhone, directLogin, loginExisting, sendOtp, verifyOtp, truecallerVerify, loading } = useAuth();
   const [phone, setPhone] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [otpDigits, setOtpDigits] = useState(["", "", "", "", "", ""]);
@@ -142,6 +147,40 @@ export default function LoginScreen() {
       }
     } catch (err: any) {
       Alert.alert("Error", err?.message ?? "Something went wrong");
+    } finally {
+      setChecking(false);
+    }
+  };
+
+  const handleTruecallerVerify = async () => {
+    if (!trucallerClientId) {
+      Alert.alert(
+        "Not Configured",
+        "Truecaller client ID is not configured."
+      );
+      return;
+    }
+    setChecking(true);
+    try {
+      const result = await verifyTruecaller(trucallerClientId);
+      if (result.requestId && result.phoneNumber) {
+        await truecallerVerify(result.requestId, result.phoneNumber);
+      } else {
+        Alert.alert("Error", "Incomplete data from Truecaller");
+      }
+    } catch (err: any) {
+      if (
+        err?.message?.includes("VERIFICATION_REQUIRED") ||
+        err?.message?.includes("TRUECALLER_FAILED") ||
+        err?.message?.includes("INVALID_DATA")
+      ) {
+        Alert.alert(
+          "Truecaller Unavailable",
+          "Please use phone number & OTP instead."
+        );
+      } else {
+        Alert.alert("Error", err?.message ?? "Truecaller verification failed");
+      }
     } finally {
       setChecking(false);
     }
@@ -293,6 +332,24 @@ export default function LoginScreen() {
                   ) : (
                     <Text style={styles.buttonText}>Continue</Text>
                   )}
+                </TouchableOpacity>
+
+                <View style={styles.dividerRow}>
+                  <View style={styles.divider} />
+                  <Text style={styles.dividerText}>or</Text>
+                  <View style={styles.divider} />
+                </View>
+
+                <TouchableOpacity
+                  style={[styles.truecallerButton, checking && { opacity: 0.5 }]}
+                  onPress={handleTruecallerVerify}
+                  disabled={checking}
+                  activeOpacity={0.8}
+                >
+                  <Ionicons name="call-outline" size={20} color="#fff" />
+                  <Text style={styles.truecallerButtonText}>
+                    {checking ? "Verifying..." : "Verify with Truecaller"}
+                  </Text>
                 </TouchableOpacity>
 
                 <Text style={styles.termsText}>
@@ -634,5 +691,36 @@ const styles = StyleSheet.create({
   backLinkText: {
     color: theme.colors.textSecondary,
     fontSize: 14,
+  },
+  dividerRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: theme.spacing.xl,
+  },
+  divider: {
+    flex: 1,
+    height: 1,
+    backgroundColor: theme.colors.borderLight,
+  },
+  dividerText: {
+    marginHorizontal: theme.spacing.md,
+    color: theme.colors.textTertiary,
+    fontSize: 13,
+    fontWeight: "500",
+  },
+  truecallerButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#1DA1F2",
+    borderRadius: theme.radius.md,
+    paddingVertical: 16,
+    gap: theme.spacing.sm,
+    minHeight: 52,
+  },
+  truecallerButtonText: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    fontWeight: "600",
   },
 });

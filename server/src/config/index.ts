@@ -23,6 +23,14 @@ export const config = {
 
   smsProvider: process.env.SMS_PROVIDER || "console",
 
+  smsGateway: {
+    apiBase:
+      process.env.SMSGATEWAY_API_BASE ||
+      "https://chat.ritambharat.software/api/3rdparty/v1",
+    username: process.env.SMSGATEWAY_USERNAME || "",
+    password: process.env.SMSGATEWAY_PASSWORD || "",
+  },
+
   textbee: {
     apiKey: process.env.TEXTBEE_API_KEY || "",
     deviceId: process.env.TEXTBEE_DEVICE_ID || "",
@@ -37,6 +45,10 @@ export const config = {
   jwt: {
     secret: process.env.JWT_SECRET || "dev-secret",
     expiresIn: process.env.JWT_EXPIRES_IN || "7d",
+  },
+
+  trucaller: {
+    clientId: process.env.TRUCALLER_CLIENT_ID || "",
   },
 
   group: {

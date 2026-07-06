@@ -1,0 +1,1 @@
+export { verifyTruecaller } from "..";

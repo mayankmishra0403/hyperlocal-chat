@@ -99,4 +99,11 @@ export const api = {
   deleteGroup(id: string) {
     return request<void>(`/groups/${id}`, { method: "DELETE" });
   },
+
+  truecallerLogin(requestId: string, phone: string, displayName?: string) {
+    return request<AuthResponse>("/auth/truecaller", {
+      method: "POST",
+      body: JSON.stringify({ requestId, phone, displayName }),
+    });
+  },
 };
