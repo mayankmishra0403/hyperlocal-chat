@@ -7,6 +7,6 @@ export interface TruecallerResult {
   phoneNumber: string;
 }
 
-export function verifyTruecaller(clientId: string): Promise<TruecallerResult> {
-  return ExpoTruecaller.verify(clientId);
+export function verifyTruecaller(): Promise<TruecallerResult> {
+  return ExpoTruecaller.verify();
 }

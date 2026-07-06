@@ -16,16 +16,12 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { useAuth } from "../context/AuthContext";
 import { theme } from "../theme";
-import Constants from "expo-constants";
 import { verifyTruecaller } from "../../modules/expo-truecaller";
 
 function maskPhone(phone: string): string {
   if (phone.length < 8) return phone;
   return phone.slice(0, 3) + "****" + phone.slice(-4);
 }
-
-const trucallerClientId =
-  Constants.expoConfig?.extra?.trucallerClientId || "";
 
 export default function LoginScreen() {
   const { checkPhone, directLogin, loginExisting, sendOtp, verifyOtp, truecallerVerify, loading } = useAuth();
@@ -153,16 +149,9 @@ export default function LoginScreen() {
   };
 
   const handleTruecallerVerify = async () => {
-    if (!trucallerClientId) {
-      Alert.alert(
-        "Not Configured",
-        "Truecaller client ID is not configured."
-      );
-      return;
-    }
     setChecking(true);
     try {
-      const result = await verifyTruecaller(trucallerClientId);
+      const result = await verifyTruecaller();
       if (result.requestId && result.phoneNumber) {
         await truecallerVerify(result.requestId, result.phoneNumber);
       } else {
